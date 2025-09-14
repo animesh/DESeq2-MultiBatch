@@ -11,7 +11,7 @@ suppressMessages({
 })
 
 # Global variables
-OUTPUT_DIR <- "proteomics_enhanced_analysis"
+OUTPUT_DIR <- "output/proteomics_enhanced_analysis"
 
 # ============================================================================
 # UTILITY FUNCTIONS
@@ -22,6 +22,25 @@ create_output_dir <- function() {
     dir.create(OUTPUT_DIR, recursive = TRUE)
   }
   cat("Output directory:", OUTPUT_DIR, "\n")
+}
+
+dark_theme <- function() {
+  theme_minimal() +
+  theme(
+    plot.background = element_rect(fill = "#1e1e1e", color = NA),
+    panel.background = element_rect(fill = "#1e1e1e", color = NA),
+    panel.grid.major = element_line(color = "#404040", size = 0.3),
+    panel.grid.minor = element_line(color = "#303030", size = 0.2),
+    text = element_text(color = "#ffffff"),
+    axis.text = element_text(color = "#cccccc"),
+    axis.title = element_text(color = "#ffffff"),
+    plot.title = element_text(color = "#ffffff", hjust = 0.5),
+    legend.background = element_rect(fill = "#1e1e1e", color = NA),
+    legend.text = element_text(color = "#cccccc"),
+    legend.title = element_text(color = "#ffffff"),
+    strip.background = element_rect(fill = "#2d2d2d", color = NA),
+    strip.text = element_text(color = "#ffffff")
+  )
 }
 
 print_section <- function(title) {
@@ -646,8 +665,7 @@ create_pca_plot <- function(intensity_matrix, annotation, title, color_by = "Bat
       x = paste0("PC1 (", var_explained[1], "%)"),
       y = paste0("PC2 (", var_explained[2], "%)")
     ) +
-    theme_minimal() +
-    theme(plot.title = element_text(hjust = 0.5))
+    dark_theme()
   
   return(p)
 }
@@ -663,8 +681,7 @@ create_annotation_comparison_plots <- function(comparison_summary) {
       x = "Significant Proteins (Raw Data)",
       y = "Significant Proteins (Batch Corrected)"
     ) +
-    theme_minimal() +
-    theme(plot.title = element_text(hjust = 0.5))
+    dark_theme()
   
   # Plot 2: Percent change
   p2 <- ggplot(comparison_summary[!is.na(comparison_summary$Percent_Change), ], 
@@ -676,8 +693,7 @@ create_annotation_comparison_plots <- function(comparison_summary) {
       x = "Variable",
       y = "Percent Change (%)"
     ) +
-    theme_minimal() +
-    theme(plot.title = element_text(hjust = 0.5))
+    dark_theme()
   
   return(list(before_after = p1, percent_change = p2))
 }

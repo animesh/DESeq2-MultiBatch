@@ -10,8 +10,8 @@ suppressMessages({
 })
 
 # Global variables
-RESULTS_DIR <- "proteomics_enhanced_analysis"
-OUTPUT_DIR <- "overlap_analysis_results"
+RESULTS_DIR <- "output/proteomics_enhanced_analysis"
+OUTPUT_DIR <- "output/overlap_analysis_results"
 
 # ============================================================================
 # UTILITY FUNCTIONS
@@ -28,6 +28,25 @@ print_section <- function(title) {
   cat("\n", paste(rep("=", 60), collapse = ""), "\n")
   cat(paste0("  ", title), "\n")
   cat(paste(rep("=", 60), collapse = ""), "\n\n")
+}
+
+dark_theme <- function() {
+  theme_minimal() +
+  theme(
+    plot.background = element_rect(fill = "#1e1e1e", color = NA),
+    panel.background = element_rect(fill = "#1e1e1e", color = NA),
+    panel.grid.major = element_line(color = "#404040", size = 0.3),
+    panel.grid.minor = element_line(color = "#303030", size = 0.2),
+    text = element_text(color = "#ffffff"),
+    axis.text = element_text(color = "#cccccc"),
+    axis.title = element_text(color = "#ffffff"),
+    plot.title = element_text(color = "#ffffff", hjust = 0.5),
+    legend.background = element_rect(fill = "#1e1e1e", color = NA),
+    legend.text = element_text(color = "#cccccc"),
+    legend.title = element_text(color = "#ffffff"),
+    strip.background = element_rect(fill = "#2d2d2d", color = NA),
+    strip.text = element_text(color = "#ffffff")
+  )
 }
 
 # ============================================================================
@@ -171,9 +190,8 @@ create_overlap_heatmap <- function(overlap_matrix, title) {
       x = "Factor",
       y = "Factor"
     ) +
-    theme_minimal() +
+    dark_theme() +
     theme(
-      plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
       axis.text.x = element_text(angle = 45, hjust = 1),
       axis.text.y = element_text(angle = 0),
       panel.grid = element_blank()
@@ -195,9 +213,8 @@ create_jaccard_heatmap <- function(overlap_details, title) {
       x = "Factor 1",
       y = "Factor 2"
     ) +
-    theme_minimal() +
+    dark_theme() +
     theme(
-      plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
       axis.text.x = element_text(angle = 45, hjust = 1),
       axis.text.y = element_text(angle = 0),
       panel.grid = element_blank()
@@ -388,9 +405,8 @@ create_factor_size_plot <- function(diff_lists) {
       x = "Factor",
       y = "Number of Proteins"
     ) +
-    theme_minimal() +
+    dark_theme() +
     theme(
-      plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
       axis.text.x = element_text(angle = 45, hjust = 1),
       legend.position = "none"
     ) +
@@ -411,10 +427,7 @@ create_overlap_summary_plot <- function(overlap_details) {
       y = "Jaccard Index",
       size = "Max Factor Size"
     ) +
-    theme_minimal() +
-    theme(
-      plot.title = element_text(hjust = 0.5, size = 14, face = "bold")
-    )
+    dark_theme()
   
   return(p)
 }
