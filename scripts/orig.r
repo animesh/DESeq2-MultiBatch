@@ -4,7 +4,8 @@
 # The first will be compensated for in XX samples
 # while the second will be compensated for on XY samples
 # (since reference level is XX, interaction term is XY-related)
-
+#install.packages("BiocManager")
+#BiocManager::install(c("DESeq2", "HTSFilter", "dplyr", "ggplot2"))
 library(DESeq2)
 library(HTSFilter)
 library(dplyr)
@@ -18,7 +19,24 @@ onedrive <- "OneDrive - Université Laval"
 folder <- "Stage recherche/WGCNA_directory/DESeq2_batch_correction"
 
 # Use file.path() to construct the full path
-full_path <- "/home/ash022/DESeq2-MultiBatch/data/"#file.path(drive, users, user_name, onedrive, folder)
+orig_full_path <- "/home/ash022/DESeq2-MultiBatch/data/"
+
+# Candidate data directories to try (project-local and known absolute paths)
+candidate_paths <- c(
+  orig_full_path,
+  file.path(getwd(), "data"),
+  "/mnt/z/Download/DESeq2-MultiBatch/data",
+  file.path(dirname(getwd()), "data")
+)
+
+# Pick the first existing candidate
+existing <- candidate_paths[dir.exists(candidate_paths) | file.exists(candidate_paths)]
+if (length(existing) == 0) {
+  stop(sprintf("data directory not found. Tried: %s\nPlease create a 'data' directory in the repo root or adjust the path in scripts/orig.r",
+               paste(candidate_paths, collapse = ", ")))
+}
+
+full_path <- existing[1]
 
 # Set the working directory for knitting
 knitr::opts_knit$set(root.dir = full_path)
@@ -28,11 +46,11 @@ setwd(full_path)
 getwd()
 
 # Load count data
-counts <- read.csv("/home/ash022/DESeq2-MultiBatch/data/counts.csv", sep = ",", row.names = 1, check.names = FALSE)
-
+counts <- read.csv("Z:/Download/DESeq2-MultiBatch/data/counts.csv", sep = ",", row.names = 1, check.names = FALSE)
+plot(counts[,1], counts[,2]) # Quick check to see if data looks ok
 # Load metadata
-colData <- read.csv("/home/ash022/DESeq2-MultiBatch/data/metadata.csv")
-
+colData <- read.csv("Z:/Download/DESeq2-MultiBatch/data/metadata.csv")
+summary(colData)
 # Convert the condition columns to factors
 # Ensure sample IDs are rownames so later indexing by sample name works
 if (!"Sample_ID" %in% colnames(colData)) {
